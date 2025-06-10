@@ -1,6 +1,6 @@
 {
   "name": "@ipa-schema/api",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "schema for api",
   "type": "module",
   "main": "index.ts",
@@ -10,7 +10,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "schema",
+    "api",
+    "types"
+  ],
   "author": "leoking",
   "license": "ISC",
   "dependencies": {
