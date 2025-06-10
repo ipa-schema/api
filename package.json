@@ -1,6 +1,6 @@
 {
   "name": "@ipa-schema/api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "schema for api",
   "type": "module",
   "main": "index.ts",
