@@ -1,7 +1,7 @@
 /*
  * @Author: leoking
  * @Date: 2025-06-10 21:54:25
- * @LastEditTime: 2025-06-12 17:40:44
+ * @LastEditTime: 2025-06-12 20:35:54
  * @LastEditors: leoking
  * @Description:
  */
@@ -9,6 +9,7 @@
 export interface ApiError {
   code: number | string;
   message: string;
+  stack?: string;
 }
 
 export interface ApiResponse<T> {
@@ -26,11 +27,14 @@ export async function parseApiResponse<T>(
   r: ApiResponse<T> | Response
 ): Promise<ApiResponse<T>> {
   if (!r) {
-    return Promise.reject(new Error("unexpected type"));
+    return Promise.reject(new Error("unexpected empty value"));
   }
   if (r instanceof Response) {
+    console.info(r);
     if (r.status !== 200) {
-      return Promise.reject(new Error(`${r.statusText}`));
+      return Promise.reject(
+        new Error(`${r.status}:${r.statusText || r.status}`)
+      );
     }
     const contentType = r.headers.get("Content-Type") ?? "application/json";
     if (!contentType.endsWith("json")) {
@@ -46,5 +50,5 @@ export async function parseApiResponse<T>(
   r = r as ApiResponse<T>;
   return r.success
     ? Promise.resolve(r)
-    : Promise.reject(new Error(`${r.error?.code}/${r.error?.message}`));
+    : Promise.reject(new Error(`${r.error?.code}:${r.error?.message}`));
 }
