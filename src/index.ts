@@ -18,6 +18,47 @@ export interface ApiResponse<T> {
   success: boolean;
   error?: ApiError;
 }
+
+export function toApiError(v: any): ApiError {
+  if (v instanceof Response && v.status != 200) {
+    return {
+      code: v.status,
+      message: v.statusText,
+    };
+  }
+  return {
+    code: -1,
+    message: String(v ?? "unknown error"),
+  };
+}
+
+/**
+ * @deprecated 最好直接调用toApiError
+ * @param v 任意值
+ * @returns
+ */
+export function pickErrorMessage(v: any) {
+  return toApiError(v).message;
+}
+
+export function positiveApiResponse<T = unknown>(
+  r: Omit<ApiResponse<T>, "success">
+): ApiResponse<T> {
+  return {
+    ...r,
+    success: true,
+  };
+}
+
+export function negativeApiResponse<T = unknown>(
+  error: ApiError
+): ApiResponse<T> {
+  return {
+    error,
+    success: false,
+  };
+}
+
 /**
  * 解析接口响应的json/txt数据，如果成功会resolve，如果失败则reject
  * @param r 响应
@@ -30,7 +71,7 @@ export async function parseApiResponse<T>(
     return Promise.reject(new Error("unexpected empty value"));
   }
   if (r instanceof Response) {
-    console.info(r);
+    console.debug(r);
     if (r.status !== 200) {
       return Promise.reject(
         new Error(`${r.status}:${r.statusText || r.status}`)
@@ -39,10 +80,11 @@ export async function parseApiResponse<T>(
     const contentType = r.headers.get("Content-Type") ?? "application/json";
     if (!contentType.endsWith("json")) {
       return r.text().then((txt) => {
-        return Promise.resolve<ApiResponse<T>>({
-          success: true,
-          data: txt as T,
-        });
+        return Promise.resolve(
+          positiveApiResponse<T>({
+            data: txt as T,
+          })
+        );
       });
     }
     return r.json().then((r) => parseApiResponse(r as ApiResponse<T>));
@@ -50,5 +92,5 @@ export async function parseApiResponse<T>(
   r = r as ApiResponse<T>;
   return r.success
     ? Promise.resolve(r)
-    : Promise.reject(new Error(`${r.error?.code}:${r.error?.message}`));
+    : Promise.reject(new Error(`${pickErrorMessage(r.error)}`));
 }

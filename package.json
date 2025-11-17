@@ -1,6 +1,6 @@
 {
   "name": "@ipa-schema/api",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "schema for api",
   "type": "module",
   "main": "index.ts",
@@ -19,7 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "typescript": "^5.8.3",
-    "@ipa-schema": "file:"
+    "@ipa-schema/api": "file:"
   },
   "devDependencies": {
     "@types/jest": "^29.3.4",
