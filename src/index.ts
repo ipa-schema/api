@@ -10,13 +10,15 @@ export interface ApiError {
   code: number | string;
   message: string;
   stack?: string;
+  [k: string]: any;
 }
 
-export interface ApiResponse<T> {
+export interface ApiResponse<T = unknown> {
   data?: T;
   message?: string;
   success: boolean;
   error?: ApiError;
+  [k: string]: any;
 }
 
 export function toApiError(v: any): ApiError {
