@@ -14,7 +14,7 @@ export interface Pager {
    * 总元素个数
    * TODO: 是否命名为itemCount更好些
    */
-  total: number;
+  total?: number;
 
   [key: string]: any;
 }
