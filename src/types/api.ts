@@ -40,6 +40,21 @@ export function toApiError(v: any): ApiError {
       stack: v.stack,
     };
   }
+
+  if (typeof v === "object") {
+    return {
+      code: v.code ?? -1,
+      message: v.message || v.msg || v.errmsg || String(v),
+    };
+  }
+
+  if (typeof v === "number") {
+    return {
+      code: v,
+      message: String(v),
+    };
+  }
+
   return {
     code: -1,
     message: String(v ?? "unknown error"),

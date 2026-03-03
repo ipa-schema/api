@@ -10,7 +10,16 @@ import {
   negativeApiResponse,
   parseApiResponse,
   positiveApiResponse,
+  toApiError,
 } from "@ipa-schema/api";
+
+describe("toApiError", () => {
+  it("raw", () => {
+    const e = toApiError({ message: "xxxxx", code: -1 });
+    expect(e.code).toBe(-1);
+    expect(e.message).toBe("xxxxx");
+  });
+});
 
 describe("ApiResponse", () => {
   it("positiveApiResponse", () => {
