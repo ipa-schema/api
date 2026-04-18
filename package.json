@@ -1,14 +1,24 @@
 {
   "name": "@ipa-schema/api",
-  "version": "0.0.5",
+  "version": "0.0.16",
   "description": "schema for api",
   "type": "module",
   "main": "index.ts",
   "exports": {
     ".": "./index.ts"
   },
+  "homepage": "https://github.com/ipa-schema/api",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ipa-schema/api.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "release": "release-it"
   },
   "keywords": [
     "schema",
@@ -18,13 +28,17 @@
   "author": "leoking",
   "license": "ISC",
   "dependencies": {
-    "typescript": "^5.8.3",
-    "@ipa-schema": "file:"
+    "@ipa-schema/api": "file:",
+    "axios": "^1.13.2",
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
+    "@ipa-schema/api": "file:",
     "@types/jest": "^29.3.4",
     "jest": "^29.3.4",
+    "release-it": "^20.0.0",
     "ts-jest": "^29.3.4",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }
