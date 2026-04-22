@@ -1,43 +1,18 @@
-# bun-library-tmpl
+# @ipa-schema/api
 
-A template for bun library project.
+## types
 
-## features
+1. `ApiResponse<T>`
 
-1. `commitlint`: lint commit message
-2. `husky`: git hook
-3. `@antfu/eslint-config`: eslint config
-4. `release-it`: release tool
-5. `happy-dom`: dom environment for testing
+## utils
 
-## usage
+1. `parseApiResponse<T>(r: any): Promise<ApiResponse<T>>`
+2. `positiveApiResponse({data})`
+3. `negativeApiResponse({error})`
+4. `toApiError(error: any): ApiError`
+5. `toPager(pager: any): Pager`
+6. `PageResult<T>`
 
-To install dependencies:
+## TODO
 
-```bash
-bun install
-```
-
-To lint your codes:
-
-```bash
-bun run lint:fix
-```
-
-To run test:
-
-```bash
-bun test
-```
-
-To build:
-
-```bash
-bun run build
-```
-
-To release:
-
-```bash
-bun run release
-```
+- [x] add unit tests
