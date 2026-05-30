@@ -1,5 +1,6 @@
 import type { DictJoinOptions } from './types'
-import { isNil } from 'lodash'
+
+const isNil = (v: unknown): v is null | undefined => v == null
 
 export const DEFAULT_DICT_JOIN_OPTS: DictJoinOptions = {
   kvDelimeter: ':',

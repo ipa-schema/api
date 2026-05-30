@@ -6,7 +6,7 @@
 export function resolveCssVar(name: string) {
   if (!name.startsWith('var('))
     return name
-  name = name.slice(4, -1)
+  name = name.slice(4, -1).trim()
   return getComputedStyle(document.documentElement)
     .getPropertyValue(name)
     .trim()

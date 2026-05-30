@@ -4,11 +4,14 @@ export * from './types'
 
 /**
  * 将任意值转换为ApiError
+ *
+ * 注意此方法假定传入的一定是错误
+ *
  * @param v
  * @returns ApiError
  */
-export function toApiError(v: any): ApiError {
-  if (v instanceof Response && v.status !== 200) {
+export function toApiError(v: unknown): ApiError {
+  if (v instanceof Response) {
     return {
       code: v.status,
       message: v.statusText,
@@ -22,10 +25,11 @@ export function toApiError(v: any): ApiError {
     }
   }
 
-  if (typeof v === 'object') {
+  if (typeof v === 'object' && v !== null) {
+    const obj = v as Record<string, unknown>
     return {
-      code: v.code ?? -1,
-      message: v.message || v.msg || v.errmsg || String(v),
+      code: (obj.code ?? -1) as number | string,
+      message: (obj.message || obj.msg || obj.errmsg || String(v)) as string,
     }
   }
 
@@ -58,12 +62,10 @@ export function pickErrorMessage(v: any) {
 export function positiveApiResponse<T = unknown>(
   r: Omit<ApiResponse<T>, 'success'>,
 ): ApiResponse<T> {
-  if (r && typeof r !== 'object') {
-    r = { data: r }
-  }
+  const base = r && typeof r !== 'object' ? { data: r } : r
 
   return {
-    ...r,
+    ...base,
     success: true,
   }
 }
@@ -76,16 +78,14 @@ export function positiveApiResponse<T = unknown>(
 export function negativeApiResponse<T = unknown>(
   error: Partial<ApiError>,
 ): ApiResponse<T> {
-  if (error && typeof error !== 'object') {
-    error = {
-      message: String(error),
-    }
-  }
+  const base = error && typeof error !== 'object'
+    ? { message: String(error) }
+    : error
   return {
     error: {
       code: -1,
       message: 'unknown error',
-      ...error,
+      ...base,
     },
     success: false,
   }
@@ -96,8 +96,11 @@ export function negativeApiResponse<T = unknown>(
  * @param r 响应
  * @returns promise
  */
-export async function parseApiResponse<T>(
-  r: ApiResponse<T> | Response | any,
+export async function parseApiResponse<T>(r: ApiResponse<T>): Promise<ApiResponse<T>>
+export async function parseApiResponse<T = unknown>(r: Response): Promise<ApiResponse<T>>
+export async function parseApiResponse<T = unknown>(r: null | undefined): Promise<ApiResponse<T>>
+export async function parseApiResponse<T = unknown>(
+  r: unknown,
 ): Promise<ApiResponse<T>> {
   if (!r) {
     return Promise.reject(new Error('unexpected empty value'))
@@ -119,10 +122,10 @@ export async function parseApiResponse<T>(
         )
       })
     }
-    return r.json().then(r => parseApiResponse(r as ApiResponse<T>))
+    return r.json().then(json => parseApiResponse(json as ApiResponse<T>))
   }
-  r = r as ApiResponse<T>
-  return r.success
-    ? Promise.resolve(r)
-    : Promise.reject(new Error(`${pickErrorMessage(r.error)}`))
+  const res = r as ApiResponse<T>
+  return res.success
+    ? Promise.resolve(res)
+    : Promise.reject(new Error(`${pickErrorMessage(res.error)}`))
 }
