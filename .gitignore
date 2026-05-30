@@ -1,3 +1,6 @@
+.codegraph
+.marscode
+
 # dependencies (bun install)
 node_modules
 
