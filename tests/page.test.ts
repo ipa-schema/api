@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { toPager } from '@/index'
+import { pager2query, toMybatisPager, toPager, toSpringPager } from '@/index'
 
 describe('toPager', () => {
   it('returns undefined for null/undefined', () => {
@@ -34,5 +34,39 @@ describe('toPager', () => {
   it('preserves extra properties from PageResult', () => {
     const result = toPager({ pageAt: 1, pageSize: 10, items: [1, 2] })
     expect(result).toEqual({ pageBase: undefined, pageAt: 1, pageSize: 10, total: undefined })
+  })
+})
+
+describe('toMybatisPager', () => {
+  it('returns default values when input is undefined', () => {
+    const result = toMybatisPager(undefined)
+    expect(result).toEqual({ base: 1, pageAt: 1, pageSize: 15, total: 0 })
+  })
+
+  it('maps Mybatis fields correctly', () => {
+    const result = toMybatisPager({ current: 3, size: 20, total: 150, pages: 8, records: [] })
+    expect(result).toEqual({ base: 1, pageAt: 3, pageSize: 20, total: 150 })
+  })
+})
+
+describe('toSpringPager', () => {
+  it('returns default values when input is undefined', () => {
+    const result = toSpringPager(undefined)
+    expect(result).toEqual({ base: 0, pageAt: 0, pageSize: 15, total: 0 })
+  })
+
+  it('maps Spring fields correctly', () => {
+    const result = toSpringPager({ number: 2, size: 25, totalElements: 300, totalPages: 12, first: false, last: false, content: [] })
+    expect(result).toEqual({ base: 0, pageAt: 2, pageSize: 25, total: 300 })
+  })
+})
+
+describe('pager2query', () => {
+  it('builds query string from pager fields', () => {
+    expect(pager2query({ pageAt: 1, pageSize: 20 })).toBe('pageAt=1&pageSize=20')
+  })
+
+  it('handles zero values', () => {
+    expect(pager2query({ pageAt: 0, pageSize: 10 })).toBe('pageAt=0&pageSize=10')
   })
 })

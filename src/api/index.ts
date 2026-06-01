@@ -29,7 +29,7 @@ export function toApiError(v: unknown): ApiError {
     const obj = v as Record<string, unknown>
     return {
       code: (obj.code ?? -1) as number | string,
-      message: (obj.message || obj.msg || obj.errmsg || String(v)) as string,
+      message: (obj.message ?? obj.msg ?? obj.errmsg ?? obj.errorMessage ?? String(v)) as string,
     }
   }
 

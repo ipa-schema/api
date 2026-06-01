@@ -12,7 +12,6 @@ export interface Pager {
 
   /**
    * 总元素个数
-   * TODO: 是否命名为itemCount更好些
    */
   total?: number
 
@@ -33,4 +32,22 @@ export interface PageResult<T> extends Pager {
    * 分页数据
    */
   items?: T[]
+}
+
+export interface SpringPageResult<T> {
+  content: T[]
+  totalElements: number
+  totalPages: number
+  first: boolean
+  last: boolean
+  size: number
+  number: number
+}
+
+export interface MybatisPageResult<T> {
+  records: T[]
+  total: number
+  size: number
+  current: number
+  pages: number
 }

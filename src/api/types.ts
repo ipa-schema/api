@@ -1,11 +1,3 @@
-/*
- * @Author: leoking
- * @Date: 2025-06-10 21:54:25
- * @LastEditTime: 2025-06-12 20:35:54
- * @LastEditors: leoking
- * @Description:
- */
-
 export interface ApiError {
   code: number | string
   message: string
@@ -19,4 +11,19 @@ export interface ApiResponse<T = unknown> {
   success: boolean
   error?: ApiError
   [k: string]: any
+}
+
+/**
+ * @deprecated 使用 ApiResponse 代替
+ */
+export type JsonResponse<T> = ApiResponse<T>
+
+export type PositiveApiResponse<T> = Pick<
+  ApiResponse<T>,
+  'data' | 'message'
+> & { success: true }
+
+export type NegativeApiResponse<T> = Omit<ApiResponse<T>, 'data'> & Partial<Pick<ApiResponse<T>, 'data'>> & {
+  success: false
+  error: ApiError
 }

@@ -6,15 +6,9 @@
  * @Description:
  */
 
-import packageJson from '../package.json'
-
 import * as browser from './browser/index'
 import * as dict from './dict/index'
 import * as number from './number/index'
-
-export function version() {
-  return packageJson.version
-}
 
 export {
   browser,
@@ -23,5 +17,6 @@ export {
 }
 
 export * from './api/index'
+export * from './http/index'
 export * from './pager/index'
 export * from './types/index'
